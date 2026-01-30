@@ -86,9 +86,30 @@ const runProfileSanityCheck = async () => {
           }
           return JSON.stringify(String(value || ""));
         };
+        const formatString = (value) => JSON.stringify(String(value || ""));
 
         const userIdLiteral = formatId(user?.id);
+        const userLoginLiteral = formatString(user?.login);
         const resultsQueries = [
+          // If permissions already scope to the user, no filter needed
+          `
+          {
+            result(limit: 10000) {
+              grade
+              path
+              object { type name }
+            }
+          }
+          `,
+          `
+          {
+            progress(limit: 10000) {
+              grade
+              path
+              object { type name }
+            }
+          }
+          `,
           // Direct result with userId
           `
           {
@@ -113,6 +134,33 @@ const runProfileSanityCheck = async () => {
           `
           {
             result(where: {user: {id: {_eq: ${userIdLiteral}}}}, limit: 10000) {
+              grade
+              path
+              object { type name }
+            }
+          }
+          `,
+          `
+          {
+            result(where: {user: {login: {_eq: ${userLoginLiteral}}}}, limit: 10000) {
+              grade
+              path
+              object { type name }
+            }
+          }
+          `,
+          `
+          {
+            result(where: {user_login: {_eq: ${userLoginLiteral}}}, limit: 10000) {
+              grade
+              path
+              object { type name }
+            }
+          }
+          `,
+          `
+          {
+            result(where: {login: {_eq: ${userLoginLiteral}}}, limit: 10000) {
               grade
               path
               object { type name }
@@ -149,6 +197,33 @@ const runProfileSanityCheck = async () => {
             }
           }
           `,
+          `
+          {
+            progress(where: {user: {login: {_eq: ${userLoginLiteral}}}}, limit: 10000) {
+              grade
+              path
+              object { type name }
+            }
+          }
+          `,
+          `
+          {
+            progress(where: {user_login: {_eq: ${userLoginLiteral}}}, limit: 10000) {
+              grade
+              path
+              object { type name }
+            }
+          }
+          `,
+          `
+          {
+            progress(where: {login: {_eq: ${userLoginLiteral}}}, limit: 10000) {
+              grade
+              path
+              object { type name }
+            }
+          }
+          `,
         ];
 
         let results = [];
@@ -165,6 +240,10 @@ const runProfileSanityCheck = async () => {
               debugEl.textContent = `Results query error: ${resultsError.message || resultsError}`;
             }
           }
+        }
+        const debugEl = document.getElementById("debug");
+        if (debugEl) {
+          debugEl.textContent = `Results fetched: ${results.length}`;
         }
 
         if (!results.length) {
@@ -203,9 +282,13 @@ const runProfileSanityCheck = async () => {
           const name = r?.object?.name;
           if (name) return String(name).toLowerCase().includes("project");
           const path = r?.path;
-          if (path) return String(path).toLowerCase().includes("project");
-          // Fallback: if no project marker exists, treat as project
-          return true;
+          if (path) {
+            const p = String(path).toLowerCase();
+            if (p.includes("exercise")) return false;
+            return p.includes("project");
+          }
+          // If we can't identify the type, don't count it
+          return false;
         };
 
         const projectResults = results.filter(isProject);
