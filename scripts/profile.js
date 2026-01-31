@@ -27,6 +27,12 @@ const runProfileSanityCheck = async () => {
         limit: 10000
       ) {
         amount
+        path
+        createdAt
+        object {
+          type
+          name
+        }
       }
       audits_given_tx: transaction(
         where: {type: {_eq: "down"}, ${userKey}: {_eq: ${userId}}}
@@ -69,182 +75,54 @@ const runProfileSanityCheck = async () => {
       const auditsReceivedEl = document.getElementById("audits-received");
       const auditRatioEl = document.getElementById("audit-ratio");
 
+      const formatBytes = (value) => {
+        if (!Number.isFinite(value)) return null;
+        if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(2)} MB`;
+        if (value >= 1_000) return `${Math.round(value / 1_000)} KB`;
+        return `${value.toFixed(2)} B`;
+      };
+
       if (xpEl) {
-        const totalXp = (statsData?.xp_transactions || []).reduce(
+        const filteredXp = (statsData?.xp_transactions || []).filter((tx) => {
+          const type = String(tx?.object?.type || "").toLowerCase();
+          const path = String(tx?.path || "").toLowerCase();
+          const isModule = path.includes("/bh-module/");
+          const isPiscine = path.includes("piscine");
+
+          if (type === "project") return true;
+          if (type === "piscine") return true;
+          if (type === "exam") return isModule && !isPiscine;
+          if (type === "exercise") return isModule && !isPiscine;
+          return false;
+        });
+
+        const totalXp = filteredXp.reduce(
           (sum, tx) => sum + (Number(tx.amount) || 0),
           0
         );
-        xpEl.textContent = `Total XP: ${totalXp}`;
+        const formatted = formatBytes(totalXp);
+        xpEl.textContent = formatted ? `Total XP: ${formatted}` : "Total XP: —";
       }
       // Pass/Fail counts from user's own results (nested relation)
       if (passEl || failEl) {
-        const formatId = (value) => {
-          if (typeof value === "number") return String(value);
-          const asNumber = Number(value);
-          if (Number.isFinite(asNumber) && String(value).trim() !== "") {
-            return String(asNumber);
+        const resultsQuery = `
+        {
+          result(limit: 10000) {
+            grade
+            path
+            object { type name }
           }
-          return JSON.stringify(String(value || ""));
-        };
-        const formatString = (value) => JSON.stringify(String(value || ""));
-
-        const userIdLiteral = formatId(user?.id);
-        const userLoginLiteral = formatString(user?.login);
-        const resultsQueries = [
-          // If permissions already scope to the user, no filter needed
-          `
-          {
-            result(limit: 10000) {
-              grade
-              path
-              object { type name }
-            }
-          }
-          `,
-          `
-          {
-            progress(limit: 10000) {
-              grade
-              path
-              object { type name }
-            }
-          }
-          `,
-          // Direct result with userId
-          `
-          {
-            result(where: {userId: {_eq: ${userIdLiteral}}}, limit: 10000) {
-              grade
-              path
-              object { type name }
-            }
-          }
-          `,
-          // Direct result with user_id
-          `
-          {
-            result(where: {user_id: {_eq: ${userIdLiteral}}}, limit: 10000) {
-              grade
-              path
-              object { type name }
-            }
-          }
-          `,
-          // Direct result with user relation
-          `
-          {
-            result(where: {user: {id: {_eq: ${userIdLiteral}}}}, limit: 10000) {
-              grade
-              path
-              object { type name }
-            }
-          }
-          `,
-          `
-          {
-            result(where: {user: {login: {_eq: ${userLoginLiteral}}}}, limit: 10000) {
-              grade
-              path
-              object { type name }
-            }
-          }
-          `,
-          `
-          {
-            result(where: {user_login: {_eq: ${userLoginLiteral}}}, limit: 10000) {
-              grade
-              path
-              object { type name }
-            }
-          }
-          `,
-          `
-          {
-            result(where: {login: {_eq: ${userLoginLiteral}}}, limit: 10000) {
-              grade
-              path
-              object { type name }
-            }
-          }
-          `,
-          // Direct progress table with userId
-          `
-          {
-            progress(where: {userId: {_eq: ${userIdLiteral}}}, limit: 10000) {
-              grade
-              path
-              object { type name }
-            }
-          }
-          `,
-          // Direct progress table with user_id
-          `
-          {
-            progress(where: {user_id: {_eq: ${userIdLiteral}}}, limit: 10000) {
-              grade
-              path
-              object { type name }
-            }
-          }
-          `,
-          // Direct progress with user relation
-          `
-          {
-            progress(where: {user: {id: {_eq: ${userIdLiteral}}}}, limit: 10000) {
-              grade
-              path
-              object { type name }
-            }
-          }
-          `,
-          `
-          {
-            progress(where: {user: {login: {_eq: ${userLoginLiteral}}}}, limit: 10000) {
-              grade
-              path
-              object { type name }
-            }
-          }
-          `,
-          `
-          {
-            progress(where: {user_login: {_eq: ${userLoginLiteral}}}, limit: 10000) {
-              grade
-              path
-              object { type name }
-            }
-          }
-          `,
-          `
-          {
-            progress(where: {login: {_eq: ${userLoginLiteral}}}, limit: 10000) {
-              grade
-              path
-              object { type name }
-            }
-          }
-          `,
-        ];
+        }
+        `;
 
         let results = [];
-        for (const query of resultsQueries) {
-          try {
-            const data = await window.graphqlRequest(query);
-            results = data?.result || data?.progress || [];
-            if (Array.isArray(results) && results.length) {
-              break;
-            }
-          } catch (resultsError) {
-            const debugEl = document.getElementById("debug");
-            if (debugEl) {
-              debugEl.textContent = `Results query error: ${resultsError.message || resultsError}`;
-            }
-          }
+        try {
+          const data = await window.graphqlRequest(resultsQuery);
+          results = data?.result || [];
+        } catch (resultsError) {
+          console.error(resultsError);
         }
-        const debugEl = document.getElementById("debug");
-        if (debugEl) {
-          debugEl.textContent = `Results fetched: ${results.length}`;
-        }
+        // Debug output removed once results are confirmed
 
         if (!results.length) {
           const diagnostics = [
@@ -293,7 +171,7 @@ const runProfileSanityCheck = async () => {
 
         const projectResults = results.filter(isProject);
         const passCount = projectResults.filter((r) => Number(r.grade) >= 1).length;
-        const failCount = projectResults.filter((r) => Number(r.grade) === 0).length;
+        const failCount = projectResults.filter((r) => Number(r.grade) < 1).length;
 
         if (passEl) passEl.textContent = `Pass: ${passCount}`;
         if (failEl) failEl.textContent = `Fail: ${failCount}`;
@@ -308,15 +186,19 @@ const runProfileSanityCheck = async () => {
           0
         );
 
-        const formatMillions = (value) =>
-          Number.isFinite(value) ? (value / 1_000_000).toFixed(2) : null;
+        const formatAudit = (value) => {
+          if (!Number.isFinite(value)) return null;
+          if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(2)} MB`;
+          if (value >= 1_000) return `${(value / 1_000).toFixed(2)} KB`;
+          return `${value.toFixed(2)} B`;
+        };
 
         if (auditsDoneEl) {
-          const val = formatMillions(auditsDone);
+          const val = formatAudit(auditsDone);
           auditsDoneEl.textContent = val ? `Audits Done: ${val}` : "Audits Done: —";
         }
         if (auditsReceivedEl) {
-          const val = formatMillions(auditsReceived);
+          const val = formatAudit(auditsReceived);
           auditsReceivedEl.textContent = val ? `Audits Received: ${val}` : "Audits Received: —";
         }
         if (auditRatioEl) {
@@ -335,10 +217,7 @@ const runProfileSanityCheck = async () => {
     }
   } catch (error) {
     console.error(error);
-    const debugEl = document.getElementById("debug");
-    if (debugEl) {
-      debugEl.textContent = `User query error: ${error.message || error}`;
-    }
+    // Debug output removed once results are confirmed
 
     const idEl = document.getElementById("user-id");
     const loginEl = document.getElementById("user-login");
