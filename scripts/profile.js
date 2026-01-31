@@ -184,14 +184,14 @@ const runProfileSanityCheck = async () => {
           return `${value.toFixed(2)} B`;
         };
 
-      if (auditsDoneEl) {
-        const val = formatAudit(auditsDone);
-        auditsDoneEl.textContent = val ? `Audits Done: ${val}` : "Audits Done: —";
-      }
-      if (auditsReceivedEl) {
-        const val = formatAudit(auditsReceived);
-        auditsReceivedEl.textContent = val ? `Audits Received: ${val}` : "Audits Received: —";
-      }
+        if (auditsDoneEl) {
+          const val = formatAudit(auditsDone);
+          auditsDoneEl.textContent = val ? `Audits Done: ${val}` : "Audits Done: —";
+        }
+        if (auditsReceivedEl) {
+          const val = formatAudit(auditsReceived);
+          auditsReceivedEl.textContent = val ? `Audits Received: ${val}` : "Audits Received: —";
+        }
       if (auditRatioEl) {
         const ratio = Number.isFinite(auditsDone) && Number.isFinite(auditsReceived) && auditsReceived !== 0
           ? (auditsDone / auditsReceived).toFixed(1)
@@ -199,10 +199,12 @@ const runProfileSanityCheck = async () => {
         auditRatioEl.textContent = ratio ? `Audit Ratio: ${ratio}` : "Audit Ratio: —";
       }
 
-      window.profileStats = window.profileStats || {};
-      window.profileStats.auditRatio = Number.isFinite(auditsDone) && Number.isFinite(auditsReceived) && auditsReceived !== 0
-        ? (auditsDone / auditsReceived)
-        : null;
+        window.profileStats = window.profileStats || {};
+        window.profileStats.auditRatio = Number.isFinite(auditsDone) && Number.isFinite(auditsReceived) && auditsReceived !== 0
+          ? (auditsDone / auditsReceived)
+          : null;
+        window.profileStats.auditsDone = auditsDone;
+        window.profileStats.auditsReceived = auditsReceived;
 
       const activityEl = document.getElementById("activity-list");
       if (activityEl) {

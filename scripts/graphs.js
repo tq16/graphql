@@ -190,10 +190,9 @@ const renderAuditBar = () => {
     return m ? Number(m[1]) : null;
   };
   const raw = Number(window.profileStats?.auditRatio);
-  const ratio = Number.isFinite(raw) ? raw : parseRatio();
-  if (!Number.isFinite(ratio)) {
-    container.textContent = "No audit ratio.";
-    return;
+  let ratio = Number.isFinite(raw) ? raw : parseRatio();
+  if (!Number.isFinite(ratio) || ratio <= 0) {
+    ratio = 0.1; // default to show a small ring instead of nothing
   }
   const pct = Math.max(0, Math.min(100, Math.round(ratio * 100)));
   const size = 160;
@@ -212,6 +211,34 @@ const renderAuditBar = () => {
       <text x="${c}" y="${c + 5}" font-size="18" text-anchor="middle" fill="#333">${ratio.toFixed(1)}</text>
     </svg>
   `;
+};
+
+const renderAuditDoneReceivedBars = () => {
+  const doneEl = document.getElementById("audits-done-bar");
+  const receivedEl = document.getElementById("audits-received-bar");
+  if (!doneEl || !receivedEl) return;
+
+  const done = Number(window.profileStats?.auditsDone);
+  const received = Number(window.profileStats?.auditsReceived);
+  const doneVal = Number.isFinite(done) ? done : 0;
+  const receivedVal = Number.isFinite(received) ? received : 0;
+  const max = Math.max(doneVal, receivedVal) || 1;
+
+  const renderBar = (el, label, value, color) => {
+    const width = 320;
+    const height = 10;
+    const barW = Math.round((value / max) * width);
+    el.innerHTML = `
+      <div style="font-size:12px;margin:4px 0;color:#333">${label}</div>
+      <svg width="${width}" height="${height}">
+        <rect x="0" y="0" width="${width}" height="${height}" fill="#eee" />
+        <rect x="0" y="0" width="${barW}" height="${height}" fill="${color}" />
+      </svg>
+    `;
+  };
+
+  renderBar(doneEl, "Done", doneVal, "#a78bfa");
+  renderBar(receivedEl, "Received", receivedVal, "#f59e0b");
 };
 
 const escapeXml = (str) =>
@@ -319,9 +346,11 @@ const initGraphs = async () => {
     const renderStats = () => {
       renderGradesBar();
       renderAuditBar();
+      renderAuditDoneReceivedBars();
     };
     renderStats();
     setTimeout(renderStats, 200);
+    setTimeout(renderStats, 600);
   } catch (error) {
     const status = error?.status;
     if (status === 401 || status === 403) {
