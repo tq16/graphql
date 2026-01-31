@@ -12,6 +12,7 @@
             <h2>User Info</h2>
             <p id="user-id"></p>
             <p id="user-login"></p>
+            <p id="user-level"></p>
         </section>
         <section>
             <h2>XP</h2>
@@ -21,27 +22,37 @@
             <h2>Grades</h2>
             <p id="pass-count"></p>
             <p id="fail-count"></p>
+            <div id="grades-graph"></div>
         </section>
         <section>
             <h2>Skills</h2>
-            <ul id="skills-list"></ul>
+            <div id="skills-bars"></div>
         </section>
         <section>
             <h2>Skills Graph</h2>
             <div id="skills-graph"></div>
         </section>
         <section>
+            <h2>XP Progression</h2>
+            <div id="xp-graph"></div>
+        </section>
+        <section>
+            <h2>Last Activity</h2>
+            <ul id="activity-list"></ul>
+        </section>
+        <section>
             <h2>Audits</h2>
             <p id="audits-given"></p>
             <p id="audits-received"></p>
             <p id="audit-ratio"></p>
+            <div id="audit-graph"></div>
         </section>
         <button id="logout">Logout</button>
     </main>
 
     <script src="../scripts/auth.js"></script>
     <script src="../scripts/api.js"></script>
-    <script src="../scripts/graphs.js"></script>
     <script src="../scripts/profile.js"></script>
+    <script src="../scripts/graphs.js"></script>
 </body>
 </html>

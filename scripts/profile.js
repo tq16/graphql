@@ -46,6 +46,13 @@ const runProfileSanityCheck = async () => {
       ) {
         amount
       }
+      level_tx: transaction(
+        where: {type: {_eq: "level"}, ${userKey}: {_eq: ${userId}}}
+        order_by: {createdAt: desc}
+        limit: 1
+      ) {
+        amount
+      }
     }
     `;
 
@@ -74,6 +81,7 @@ const runProfileSanityCheck = async () => {
       const auditsDoneEl = document.getElementById("audits-given");
       const auditsReceivedEl = document.getElementById("audits-received");
       const auditRatioEl = document.getElementById("audit-ratio");
+      const levelEl = document.getElementById("user-level");
 
       const formatBytes = (value) => {
         if (!Number.isFinite(value)) return null;
@@ -103,6 +111,11 @@ const runProfileSanityCheck = async () => {
         const formatted = formatBytes(totalXp);
         xpEl.textContent = formatted ? `Total XP: ${formatted}` : "Total XP: —";
       }
+
+      if (levelEl) {
+        const level = statsData?.level_tx?.[0]?.amount;
+        levelEl.textContent = Number.isFinite(level) ? `Level: ${level}` : "Level: —";
+      }
       // Pass/Fail counts from user's own results (nested relation)
       if (passEl || failEl) {
         const resultsQuery = `
@@ -122,38 +135,10 @@ const runProfileSanityCheck = async () => {
         } catch (resultsError) {
           console.error(resultsError);
         }
-        // Debug output removed once results are confirmed
-
         if (!results.length) {
-          const diagnostics = [
-            `
-            {
-              result(limit: 3) { id grade userId user_id }
-            }
-            `,
-            `
-            {
-              progress(limit: 3) { id grade userId user_id }
-            }
-            `,
-          ];
-
-          for (const query of diagnostics) {
-            try {
-              const data = await window.graphqlRequest(query);
-              const debugEl = document.getElementById("debug");
-              if (debugEl) {
-                debugEl.textContent = `Diagnostics: ${JSON.stringify(data)}`;
-              }
-              break;
-            } catch (diagError) {
-              const debugEl = document.getElementById("debug");
-              if (debugEl) {
-                debugEl.textContent = `Diagnostics error: ${diagError.message || diagError}`;
-              }
-            }
-          }
-        }
+          if (passEl) passEl.textContent = "Passed Projects: 0";
+          if (failEl) failEl.textContent = "Failed Projects: 0";
+        } else {
         const isProject = (r) => {
           const type = r?.object?.type;
           if (type) return String(type).toLowerCase() === "project";
@@ -176,6 +161,11 @@ const runProfileSanityCheck = async () => {
         if (passEl) passEl.textContent = `Passed Projects: ${passCount}`;
         if (failEl) failEl.textContent = `Failed Projects: ${failCount}`;
 
+        window.profileStats = window.profileStats || {};
+        window.profileStats.passCount = passCount;
+        window.profileStats.failCount = failCount;
+        }
+
       }
       if (auditsDoneEl || auditsReceivedEl || auditRatioEl) {
         const auditsDone = (statsData?.audits_received_tx || []).reduce(
@@ -194,20 +184,69 @@ const runProfileSanityCheck = async () => {
           return `${value.toFixed(2)} B`;
         };
 
-        if (auditsDoneEl) {
-          const val = formatAudit(auditsDone);
-          auditsDoneEl.textContent = val ? `Audits Done: ${val}` : "Audits Done: —";
+      if (auditsDoneEl) {
+        const val = formatAudit(auditsDone);
+        auditsDoneEl.textContent = val ? `Audits Done: ${val}` : "Audits Done: —";
+      }
+      if (auditsReceivedEl) {
+        const val = formatAudit(auditsReceived);
+        auditsReceivedEl.textContent = val ? `Audits Received: ${val}` : "Audits Received: —";
+      }
+      if (auditRatioEl) {
+        const ratio = Number.isFinite(auditsDone) && Number.isFinite(auditsReceived) && auditsReceived !== 0
+          ? (auditsDone / auditsReceived).toFixed(1)
+          : null;
+        auditRatioEl.textContent = ratio ? `Audit Ratio: ${ratio}` : "Audit Ratio: —";
+      }
+
+      window.profileStats = window.profileStats || {};
+      window.profileStats.auditRatio = Number.isFinite(auditsDone) && Number.isFinite(auditsReceived) && auditsReceived !== 0
+        ? (auditsDone / auditsReceived)
+        : null;
+
+      const activityEl = document.getElementById("activity-list");
+      if (activityEl) {
+        const activityQuery = `
+        {
+          transaction(
+            where: { type: { _eq: "xp" } }
+            order_by: { createdAt: desc }
+            limit: 50
+          ) {
+            type
+            amount
+            createdAt
+            path
+            object { name }
+          }
         }
-        if (auditsReceivedEl) {
-          const val = formatAudit(auditsReceived);
-          auditsReceivedEl.textContent = val ? `Audits Received: ${val}` : "Audits Received: —";
+        `;
+        try {
+          const data = await window.graphqlRequest(activityQuery);
+          const items = data?.transaction || [];
+          const seen = new Set();
+          const unique = [];
+          for (const tx of items) {
+            const name =
+              tx?.object?.name ||
+              String(tx?.path || "").split("/").filter(Boolean).pop() ||
+              tx.type;
+            if (seen.has(name)) continue;
+            seen.add(name);
+            unique.push({
+              name,
+              amount: Number(tx.amount) || 0,
+            });
+            if (unique.length === 5) break;
+          }
+
+          activityEl.innerHTML = unique.length
+            ? unique.map((tx) => `<li>${tx.name} — ${formatBytes(tx.amount)}</li>`).join("")
+            : "<li>No activity</li>";
+        } catch (err) {
+          activityEl.innerHTML = "<li>No activity</li>";
         }
-        if (auditRatioEl) {
-          const ratio = Number.isFinite(auditsDone) && Number.isFinite(auditsReceived) && auditsReceived !== 0
-            ? (auditsDone / auditsReceived).toFixed(1)
-            : null;
-          auditRatioEl.textContent = ratio ? `Audit Ratio: ${ratio}` : "Audit Ratio: —";
-        }
+      }
       }
     } catch (statsError) {
       console.error(statsError);
