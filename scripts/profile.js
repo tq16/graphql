@@ -110,7 +110,7 @@ const runProfileSanityCheck = async () => {
           result(limit: 10000) {
             grade
             path
-            object { type name }
+            object { type name attrs }
           }
         }
         `;
@@ -173,8 +173,9 @@ const runProfileSanityCheck = async () => {
         const passCount = projectResults.filter((r) => Number(r.grade) >= 1).length;
         const failCount = projectResults.filter((r) => Number(r.grade) < 1).length;
 
-        if (passEl) passEl.textContent = `Pass: ${passCount}`;
-        if (failEl) failEl.textContent = `Fail: ${failCount}`;
+        if (passEl) passEl.textContent = `Passed Projects: ${passCount}`;
+        if (failEl) failEl.textContent = `Failed Projects: ${failCount}`;
+
       }
       if (auditsDoneEl || auditsReceivedEl || auditRatioEl) {
         const auditsDone = (statsData?.audits_received_tx || []).reduce(
