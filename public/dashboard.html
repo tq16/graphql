@@ -1,109 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="css/dashboard.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMPOWERS | Digital Cockpit</title>
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="app">
-        <header class="topbar">
-            <div class="topbar-center">
-                <div class="brand"><span class="brand-word">EMPOWER</span><span class="brand-accent">S</span></div>
-                <div class="welcome">Welcome Back</div>
-            </div>
-            <div class="topbar-right">
-                <button id="logout">Logout</button>
-            </div>
-        </header>
-
-        <main class="container">
-            <section class="grid-top">
-                <article class="card info-card">
-                    <div class="card-head">
-                        <h2 class="card-title">User Info</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="info-grid">
-                            <p id="user-id"></p>
-                            <p id="user-login"></p>
-                            <p id="user-level"></p>
-                            <p id="user-xp"></p>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="card grades-card">
-                    <div class="card-head">
-                        <h2 class="card-title">Audit Ratio</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-box" id="audits-done-bar"></div>
-                        <div class="chart-box" id="audits-received-bar"></div>
-                        <p id="audit-ratio" class="sr-only"></p>
-                        <div class="chart-box" id="audit-graph"></div>
-                    </div>
-                </article>
-            </section>
-
-            <section class="grid-mid">
-                <article class="card">
-                    <div class="card-head">
-                        <h2 class="card-title">Grades</h2>
-                    </div>
-                    <div class="card-body">
-                        <p id="pass-count"></p>
-                        <p id="fail-count"></p>
-                        <div class="chart-box" id="grades-graph"></div>
-                    </div>
-                </article>
-                <article class="card">
-                    <div class="card-head">
-                        <h2 class="card-title">Last Activity</h2>
-                    </div>
-                    <div class="card-body">
-                        <ul id="activity-list"></ul>
-                    </div>
-                </article>
-
-            </section>
-
-            <section class="grid-bottom">
-                <article class="card">
-                    <div class="card-head">
-                        <h2 class="card-title">Skills</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-box" id="skills-bars"></div>
-                    </div>
-                </article>
-
-                <article class="card">
-                    <div class="card-head">
-                        <h2 class="card-title">Skills Graph</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-box" id="skills-graph"></div>
-                    </div>
-                </article>
-
-                <article class="card">
-                    <div class="card-head">
-                        <h2 class="card-title">XP Progression</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart-box" id="xp-graph"></div>
-                    </div>
-                </article>
-
-            </section>
-        </main>
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="status-row">
+        <span class="dot"></span>
+        <span class="status">Protocol Active</span>
+      </div>
+      <span class="status-sub">System.Clearance_Lvl.4</span>
     </div>
 
-    <script src="../scripts/auth.js"></script>
-    <script src="../scripts/api.js"></script>
-    <script src="../scripts/profile.js"></script>
-    <script src="../scripts/graphs.js"></script>
+    <div class="topbar-center">
+      <h1 class="brand">
+        <span class="brand-metal">EMPOW</span>
+        <span class="brand-o" aria-hidden="true"></span>
+        <span class="brand-metal">ERS</span>
+      </h1>
+      <div class="brand-line"></div>
+      <span class="brand-sub">Performance Cockpit Dashboard</span>
+    </div>
+
+    <div class="topbar-right">
+      <div class="temp">
+        <span>Internal Temp</span>
+        <strong>194°F</strong>
+      </div>
+      <button id="logout" class="logout-btn">Disconnect</button>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <section class="panel profile-panel">
+      <div class="corner tl"></div>
+      <div class="corner br"></div>
+      <h2 class="panel-title">Driver Profile</h2>
+      <div class="profile-block">
+        <div class="profile-row">
+          <span class="label">System Identification</span>
+          <div class="profile-split">
+            <span id="user-id" class="value"></span>
+            <span class="role">OPERATIVE</span>
+          </div>
+        </div>
+        <div class="profile-row">
+          <span class="label">Login Handle</span>
+          <span id="user-login" class="login-name"></span>
+        </div>
+        <div class="profile-grid">
+          <div class="stat-box">
+            <span>Rank Level</span>
+            <strong id="user-level"></strong>
+          </div>
+          <div class="stat-box">
+            <span>Total XP</span>
+            <strong id="user-xp"></strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="corner tl"></div>
+      <div class="corner br"></div>
+      <h2 class="panel-title">Turbo Audit Ratio</h2>
+      <div class="audit-layout">
+        <div class="audit-circle">
+          <div class="audit-circle-inner" id="audit-graph"></div>
+          <div id="audit-ratio" class="sr-only"></div>
+        </div>
+        <div class="audit-bars">
+          <div class="audit-bar" id="audits-done-bar"></div>
+          <div class="audit-bar" id="audits-received-bar"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="corner tl"></div>
+      <div class="corner br"></div>
+      <h2 class="panel-title">Mission Success</h2>
+      <div class="grades-wrap">
+        <div class="grades-score">
+          <span class="score">93%</span>
+          <span class="score-label">Efficiency Rating</span>
+        </div>
+        <div class="grades-meta">
+          <span id="pass-count"></span>
+          <span id="fail-count"></span>
+        </div>
+        <div class="grades-bar" id="grades-graph"></div>
+        <div class="grades-scale">
+          <span>0% Power</span>
+          <span>Max Performance</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="corner tl"></div>
+      <div class="corner br"></div>
+      <h2 class="panel-title">System Feed</h2>
+      <ul class="activity-list" id="activity-list"></ul>
+    </section>
+
+    <section class="panel">
+      <div class="corner tl"></div>
+      <div class="corner br"></div>
+      <h2 class="panel-title">Performance Tuning</h2>
+      <div class="chart-box" id="skills-graph"></div>
+    </section>
+
+    <section class="panel">
+      <div class="corner tl"></div>
+      <div class="corner br"></div>
+      <h2 class="panel-title">Skills</h2>
+      <div class="chart-box" id="skills-bars"></div>
+    </section>
+
+    <section class="panel">
+      <div class="corner tl"></div>
+      <div class="corner br"></div>
+      <h2 class="panel-title">XP Speed Curve</h2>
+      <div class="chart-box" id="xp-graph"></div>
+      <div class="xp-epochs">
+        <span>EPOCH.01</span>
+        <span>EPOCH.04</span>
+        <span>EPOCH.08</span>
+        <span>EPOCH.12</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-left">
+      <span class="footer-brand">EMPOWERS DIGITAL</span>
+      <div class="divider"></div>
+      <span class="footer-meta">v4.0.2-LTS // High Performance Protocol</span>
+    </div>
+    <div class="footer-dots">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </footer>
+
+  <script src="../scripts/auth.js"></script>
+  <script src="../scripts/api.js"></script>
+  <script src="../scripts/profile.js"></script>
+  <script src="../scripts/graphs.js"></script>
 </body>
 </html>

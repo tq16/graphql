@@ -1,40 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="css/login.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMPOW Digital Cockpit Login</title>
+  <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
-    <main class="login-shell">
-        <header class="brand">
-            <span class="brand-word">EMPOWER</span><span class="brand-accent">S</span>
-        </header>
+  <div class="carbon-bg" aria-hidden="true"></div>
+  <div class="carbon-overlay" aria-hidden="true"></div>
+  <div class="light-trail trail-1" aria-hidden="true"></div>
+  <div class="light-trail trail-2" aria-hidden="true"></div>
+  <div class="light-trail trail-3" aria-hidden="true"></div>
+  <div class="light-trail trail-4" aria-hidden="true"></div>
 
-        <section class="login-card">
-            <h1>Login</h1>
-            <form id="login-form">
-                <label>
-                    Email/Password
-                    <div class="field">
-                        <span class="icon">👤</span>
-                        <input type="text" id="identifier" required>
-                    </div>
-                </label>
-                <label>
-                    Password
-                    <div class="field">
-                        <span class="icon">🔒</span>
-                        <input type="password" id="password" required>
-                    </div>
-                </label>
-                <button type="submit">Log In</button>
-                <div id="error" role="alert"></div>
-            </form>
-        </section>
-    </main>
+  <main class="login-stage">
+    <header class="brand">
+      <div class="brand-logo" aria-label="EMPOWERS">
+        <span class="brand-letter pos-e">E</span>
+        <span class="brand-letter pos-m">M</span>
+        <span class="brand-letter pos-p">P</span>
+        <span class="brand-letter brand-o pos-o" aria-hidden="true"></span>
+        <span class="brand-letter pos-w">W</span>
+        <span class="brand-letter pos-e2">E</span>
+        <span class="brand-letter pos-r">R</span>
+        <span class="brand-letter pos-s">S</span>
+      </div>
+      <div class="perf-row">
+        <div class="perf-group">
+          <span class="perf-bar active"></span>
+          <span class="perf-bar active"></span>
+          <span class="perf-bar active"></span>
+          <span class="perf-bar active"></span>
+          <span class="perf-bar"></span>
+        </div>
+        <span class="perf-label">Performance Mode: Active</span>
+        <div class="perf-group">
+          <span class="perf-bar"></span>
+          <span class="perf-bar active"></span>
+          <span class="perf-bar active"></span>
+          <span class="perf-bar active"></span>
+          <span class="perf-bar active"></span>
+        </div>
+      </div>
+    </header>
 
-    <script src="../scripts/auth.js"></script>
+    <section class="card-shell">
+      <div class="login-card">
+        <div class="gauge-ring ring-1" aria-hidden="true"></div>
+        <div class="gauge-ring ring-2" aria-hidden="true"></div>
+
+        <div class="login-head">
+          <div class="login-head-left">
+            <span class="accent-bar"></span>
+            <div>
+              <h2>Ignition Sequence</h2>
+              <p>SYSTEM READY // OPTIMIZED</p>
+            </div>
+          </div>
+          <div class="login-head-right">
+            <span>ID: 00-EMP-2024</span>
+            <span class="pulse">TRANSMITTING...</span>
+          </div>
+        </div>
+
+        <form id="login-form" class="login-form">
+          <label class="field-group">
+            <span class="field-label">Biometric / Driver ID</span>
+            <div class="field">
+              <span class="field-icon">🧬</span>
+              <input type="text" id="identifier" placeholder="Input Driver Hash" required>
+            </div>
+          </label>
+
+          <label class="field-group">
+            <span class="field-label">Security Override Key</span>
+            <div class="field">
+              <span class="field-icon">🔑</span>
+              <input type="password" id="password" placeholder="••••••••••••" required>
+            </div>
+          </label>
+
+          <button type="submit" class="ignite-btn">
+            <span class="ignite-icon" aria-hidden="true">⚙️</span>
+            <span class="ignite-text">Engage System</span>
+          </button>
+          <div id="error" role="alert"></div>
+        </form>
+
+        <div class="login-footer">
+          <a href="#">Emergency Reset</a>
+          <div class="link-state">
+            <span>Link State</span>
+            <div class="link-bar"><div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="status-row">
+      <div class="status-card">
+        <span>Boost</span>
+        <strong>1.8 BAR</strong>
+      </div>
+      <div class="status-card">
+        <span>Temp</span>
+        <strong>92°C</strong>
+      </div>
+      <div class="status-card">
+        <span>Status</span>
+        <strong class="ok">STABLE</strong>
+      </div>
+    </section>
+  </main>
+
+  <footer class="legal">
+    <div class="corner corner-left"></div>
+    <div class="legal-text">
+      <p>Network Protocol</p>
+      <p class="muted">AES-256 Cockpit Encryption</p>
+    </div>
+    <div class="legal-text right">
+      <p>Build Version</p>
+      <p class="muted">v4.0.1-PROTOTYPE</p>
+    </div>
+    <div class="corner corner-right"></div>
+  </footer>
+
+  <script src="../scripts/auth.js"></script>
 </body>
 </html>

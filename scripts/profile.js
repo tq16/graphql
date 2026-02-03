@@ -17,7 +17,7 @@ const runProfileSanityCheck = async () => {
     const loginEl = document.getElementById("user-login");
 
     if (idEl) idEl.textContent = user?.id ? `ID: ${user.id}` : "ID: —";
-    if (loginEl) loginEl.textContent = user?.login ? `Login: ${user.login}` : "Login: —";
+    if (loginEl) loginEl.textContent = user?.login ? `${user.login}` : "—";
 
     const buildStatsQuery = (userKey, userId) => `
     {
@@ -271,7 +271,7 @@ const runProfileSanityCheck = async () => {
     const auditRatioEl = document.getElementById("audit-ratio");
 
     if (idEl && !idEl.textContent) idEl.textContent = "ID: —";
-    if (loginEl && !loginEl.textContent) loginEl.textContent = "Login: —";
+    if (loginEl && !loginEl.textContent) loginEl.textContent = "—";
     if (xpEl && !xpEl.textContent) xpEl.textContent = "Total XP: —";
     if (passEl && !passEl.textContent) passEl.textContent = "Pass: —";
     if (failEl && !failEl.textContent) failEl.textContent = "Fail: —";

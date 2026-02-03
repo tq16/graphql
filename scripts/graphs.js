@@ -195,34 +195,38 @@ const renderAuditBar = () => {
     ratio = 0.1; // default to show a small ring instead of nothing
   }
   const pct = Math.max(0, Math.min(100, Math.round(ratio * 100)));
-  const size = 170;
-  const stroke = 14;
+  const ratioText = Number.isFinite(ratio)
+    ? ratio.toFixed(1)
+    : "0.0";
+  const size = 200;
+  const stroke = 12;
   const r = (size - stroke) / 2;
   const c = size / 2;
   const circumference = 2 * Math.PI * r;
-  const offset = circumference * (1 - pct / 100);
+  const arc = circumference * 0.75; // 270deg gauge
+  const arcOffset = circumference * 0.125; // center the gap at top
+  const progress = arc * (pct / 100);
 
   container.innerHTML = `
     <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
       <defs>
-        <linearGradient id="gold-ring" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="gold-ring" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stop-color="#F6C445"/>
-          <stop offset="100%" stop-color="#D9A72F"/>
-        </linearGradient>
-        <linearGradient id="gold-ring-inner" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="rgba(246,196,69,0.9)"/>
-          <stop offset="100%" stop-color="rgba(246,196,69,0.3)"/>
+          <stop offset="100%" stop-color="#EF4444"/>
         </linearGradient>
       </defs>
-      <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="rgba(233,238,247,0.12)" stroke-width="${stroke}" />
-      <circle cx="${c}" cy="${c}" r="${r - 10}" fill="none" stroke="rgba(0,0,0,0.4)" stroke-width="4" />
+      <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="rgba(251,191,36,0.12)" stroke-width="${stroke}"
+        stroke-dasharray="${arc} ${circumference - arc}" stroke-dashoffset="${arcOffset}" />
       <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="url(#gold-ring)" stroke-width="${stroke}"
-        stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" stroke-linecap="round"
-        transform="rotate(-90 ${c} ${c})" />
-      <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="url(#gold-ring-inner)" stroke-width="2"
-        stroke-dasharray="${circumference}" stroke-dashoffset="${offset + 8}" />
-      <circle cx="${c}" cy="${c}" r="${r - 16}" fill="rgba(18, 25, 38, 0.7)" stroke="rgba(246,196,69,0.25)" />
-      <text x="${c}" y="${c + 6}" font-size="20" font-weight="700" text-anchor="middle" fill="#F6C445">${pct}%</text>
+        stroke-dasharray="${progress} ${circumference - progress}" stroke-dashoffset="${arcOffset}"
+        stroke-linecap="round" />
+      <g stroke="rgba(251,191,36,0.5)" stroke-width="2">
+        <line x1="${c}" y1="${c - r}" x2="${c}" y2="${c - r - 10}" />
+        <line x1="${c + r * 0.7}" y1="${c + r * 0.7}" x2="${c + r * 0.78}" y2="${c + r * 0.78}" />
+        <line x1="${c - r * 0.7}" y1="${c + r * 0.7}" x2="${c - r * 0.78}" y2="${c + r * 0.78}" />
+      </g>
+      <text x="${c}" y="${c + 4}" font-size="26" font-weight="800" text-anchor="middle" fill="#F6C445" font-style="italic">${ratioText}</text>
+      <text x="${c}" y="${c + 24}" font-size="9" text-anchor="middle" fill="rgba(251,191,36,0.8)" letter-spacing="2">RATIO BOOST</text>
     </svg>
   `;
 };
@@ -246,18 +250,23 @@ const renderAuditDoneReceivedBars = () => {
   };
 
   const renderBar = (el, label, value, color) => {
-    const width = 320;
-    const height = 10;
+    const width = 220;
+    const height = 4;
     const barW = Math.round((value / max) * width);
     const amount = formatAmount(value);
+    const amountParts = amount.split(" ");
+    const amountValue = amountParts[0] || amount;
+    const amountUnit = amountParts[1] || "";
     el.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;">
-        <div style="font-size:12px;color:#E9EEF7;min-width:70px;">${label}</div>
-        <svg width="${width}" height="${height}">
-          <rect x="0" y="0" width="${width}" height="${height}" fill="rgba(233,238,247,0.12)" />
-          <rect x="0" y="0" width="${barW}" height="${height}" fill="${color}" />
-        </svg>
-        <div style="font-size:12px;color:#E9EEF7;white-space:nowrap;">${amount}</div>
+      <div style="display:grid;gap:6px;">
+        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(233,238,247,0.5);">${label}</div>
+        <div style="display:flex;align-items:baseline;gap:6px;">
+          <span style="font-size:18px;font-family:'JetBrains Mono',monospace;color:#E9EEF7;">${amountValue}</span>
+          <span style="font-size:10px;letter-spacing:0.2em;color:rgba(233,238,247,0.45);">${amountUnit}</span>
+        </div>
+        <div style="height:${height}px;background:rgba(233,238,247,0.12);width:100%;position:relative;">
+          <div style="height:${height}px;width:${barW}px;background:${color};box-shadow:0 0 10px ${color};"></div>
+        </div>
       </div>
     `;
   };
