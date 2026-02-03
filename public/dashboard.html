@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <div class="app">
+        <header class="topbar">
+            <div class="topbar-center">
+                <div class="brand"><span class="brand-word">EMPOWER</span><span class="brand-accent">S</span></div>
+                <div class="welcome">Welcome Back</div>
+            </div>
+            <div class="topbar-right">
+                <button id="logout">Logout</button>
+            </div>
+        </header>
+
+        <main class="container">
+            <section class="grid-top">
+                <article class="card info-card">
+                    <div class="card-head">
+                        <h2 class="card-title">User Info</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <p id="user-id"></p>
+                            <p id="user-login"></p>
+                            <p id="user-level"></p>
+                            <p id="user-xp"></p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card grades-card">
+                    <div class="card-head">
+                        <h2 class="card-title">Audit Ratio</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-box" id="audits-done-bar"></div>
+                        <div class="chart-box" id="audits-received-bar"></div>
+                        <p id="audit-ratio" class="sr-only"></p>
+                        <div class="chart-box" id="audit-graph"></div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="grid-mid">
+                <article class="card">
+                    <div class="card-head">
+                        <h2 class="card-title">Grades</h2>
+                    </div>
+                    <div class="card-body">
+                        <p id="pass-count"></p>
+                        <p id="fail-count"></p>
+                        <div class="chart-box" id="grades-graph"></div>
+                    </div>
+                </article>
+                <article class="card">
+                    <div class="card-head">
+                        <h2 class="card-title">Last Activity</h2>
+                    </div>
+                    <div class="card-body">
+                        <ul id="activity-list"></ul>
+                    </div>
+                </article>
+
+            </section>
+
+            <section class="grid-bottom">
+                <article class="card">
+                    <div class="card-head">
+                        <h2 class="card-title">Skills</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-box" id="skills-bars"></div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-head">
+                        <h2 class="card-title">Skills Graph</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-box" id="skills-graph"></div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-head">
+                        <h2 class="card-title">XP Progression</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-box" id="xp-graph"></div>
+                    </div>
+                </article>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="../scripts/auth.js"></script>
+    <script src="../scripts/api.js"></script>
+    <script src="../scripts/profile.js"></script>
+    <script src="../scripts/graphs.js"></script>
+</body>
+</html>

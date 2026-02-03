@@ -1,0 +1,219 @@
+:root {
+  --bg0: #070A0F;
+  --bg1: #0C111B;
+  --panel: rgba(18, 25, 38, 0.62);
+  --panel2: rgba(18, 25, 38, 0.35);
+  --text: #E9EEF7;
+  --muted: rgba(233,238,247,0.65);
+  --gold: #F6C445;
+  --gold2: #D9A72F;
+  --stroke: rgba(246,196,69,0.55);
+  --stroke2: rgba(246,196,69,0.25);
+  --shadow: rgba(0,0,0,0.55);
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+  color: var(--text);
+
+  /* ✅ closer to mock: bokeh + vignette + base gradient */
+  background:
+    radial-gradient(900px 600px at 12% 18%, rgba(246,196,69,.14), transparent 60%),
+    radial-gradient(700px 520px at 86% 22%, rgba(120,180,255,.10), transparent 56%),
+    radial-gradient(900px 700px at 68% 88%, rgba(246,196,69,.08), transparent 62%),
+    radial-gradient(1200px 900px at 50% 50%, rgba(0,0,0,0), rgba(0,0,0,.72)),
+    linear-gradient(180deg, var(--bg1), var(--bg0));
+
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+/* ✅ subtle carbon-fiber texture, less harsh than before */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255,255,255,.035) 0px,
+      rgba(255,255,255,.035) 2px,
+      rgba(0,0,0,0) 10px,
+      rgba(0,0,0,0) 14px
+    );
+  opacity: .22;
+  pointer-events: none;
+}
+
+/* ✅ centered container */
+.login-shell {
+  width: min(520px, 92vw);
+  display: grid;
+  gap: 16px;
+  text-align: center;
+}
+
+/* ✅ brand like mock (wide tracking + subtle glow) */
+.brand {
+  font-family: "JetBrains Mono", "Inter", sans-serif;
+  font-size: 30px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-shadow: 0 0 24px rgba(246,196,69,.10);
+}
+
+.brand-word { color: var(--text); }
+.brand-accent { color: var(--gold); }
+
+/* ✅ card: glass blur + double border + glow */
+.login-card {
+  background:
+    linear-gradient(180deg, rgba(18,25,38,.72), rgba(10,14,22,.52));
+  border-radius: var(--radius);
+  padding: 24px 22px 20px;
+  text-align: left;
+  position: relative;
+
+  /* glass */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  /* shadow */
+  box-shadow:
+    0 28px 70px var(--shadow),
+    0 0 0 1px rgba(255,255,255,.05) inset;
+}
+
+/* outer gold border + glow */
+.login-card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: calc(var(--radius) + 1px);
+  border: 1px solid var(--stroke);
+  box-shadow: 0 0 34px rgba(246,196,69,.20);
+  pointer-events: none;
+}
+
+/* inner subtle border like mock */
+.login-card::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border-radius: calc(var(--radius) - 8px);
+  border: 1px solid rgba(246,196,69,.10);
+  pointer-events: none;
+}
+
+.login-card h1 {
+  margin: 0 0 14px;
+  font-size: 20px;
+  font-family: "JetBrains Mono", "Inter", sans-serif;
+  font-weight: 700;
+}
+
+/* labels */
+label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+/* ✅ input field with focus glow */
+.field {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  background: rgba(0,0,0,.20);
+  border: 1px solid rgba(246,196,69,.14);
+
+  padding: 10px 12px;
+  border-radius: 12px;
+
+  box-shadow: 0 0 0 1px rgba(255,255,255,.03) inset;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+.field:focus-within {
+  border-color: rgba(246,196,69,.55);
+  box-shadow:
+    0 0 0 4px rgba(246,196,69,.10),
+    0 0 26px rgba(246,196,69,.14),
+    0 0 0 1px rgba(255,255,255,.04) inset;
+  transform: translateY(-1px);
+}
+
+.icon {
+  color: var(--gold);
+  font-size: 16px;
+  filter: drop-shadow(0 0 8px rgba(246,196,69,.18));
+}
+
+input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 14px;
+}
+
+input::placeholder {
+  color: rgba(233,238,247,.35);
+}
+
+/* ✅ button like mock: bigger glow, smoother radius */
+button {
+  margin-top: 14px;
+  width: 150px;
+  padding: 10px 16px;
+  background: linear-gradient(180deg, var(--gold), var(--gold2));
+  color: #1a1d29;
+  border: none;
+  border-radius: 12px;
+  font-weight: 800;
+  cursor: pointer;
+
+  box-shadow:
+    0 12px 34px rgba(246,196,69,.22),
+    0 0 0 1px rgba(255,255,255,.22) inset;
+
+  transition: transform .15s ease, filter .15s ease, box-shadow .15s ease;
+}
+
+button:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow:
+    0 16px 40px rgba(246,196,69,.26),
+    0 0 0 1px rgba(255,255,255,.22) inset;
+}
+
+button:active {
+  transform: translateY(0px) scale(.99);
+}
+
+/* error */
+#error {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #ff8c8c;
+}
+
+/* mobile */
+@media (max-width: 420px) {
+  .brand { font-size: 22px; }
+  button { width: 100%; }
+}

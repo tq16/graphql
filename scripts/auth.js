@@ -2,22 +2,29 @@ const SIGNIN_URL = "https://learn.reboot01.com/api/auth/signin";
 const JWT_KEY = "jwt";
 
 const path = window.location.pathname;
-const isHomePage = path.endsWith("home.html");
+const isLoginPage = path.endsWith("login.html");
+const isDashboardPage = path.endsWith("dashboard.html");
 
-if (isHomePage) {
-  const token = localStorage.getItem(JWT_KEY);
-  if (!token) {
-    window.location.replace("index.html");
-  }
+const token = localStorage.getItem(JWT_KEY);
+
+if (isLoginPage && token) {
+  window.location.replace("dashboard.html");
+}
+
+if (!isLoginPage && !token) {
+  window.location.replace("login.html");
+}
+
+if (isDashboardPage) {
 
   const logoutBtn = document.getElementById("logout");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem(JWT_KEY);
-      window.location.replace("index.html");
+      window.location.replace("login.html");
     });
   }
-} else {
+} else if (isLoginPage) {
   const form = document.getElementById("login-form");
   const identifierInput = document.getElementById("identifier");
   const passwordInput = document.getElementById("password");
@@ -100,7 +107,7 @@ if (isHomePage) {
           }
 
           localStorage.setItem(JWT_KEY, token);
-          window.location.replace("home.html");
+          window.location.replace("dashboard.html");
         } else {
           showError(errorText || "Invalid credentials");
           console.error("Signin failed:", response.status, errorText);
