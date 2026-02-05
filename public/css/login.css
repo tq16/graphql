@@ -281,9 +281,9 @@ input::placeholder {
 }
 
 .ignite-btn {
-  padding: 16px 24px;
-  border: 1px solid rgba(255, 157, 0, 0.65);
-  background: linear-gradient(135deg, #0c0c0c 0%, #1b1b1b 100%);
+  padding: 18px 26px;
+  border: 1px solid var(--amber-glow);
+  background: linear-gradient(135deg, #111 0%, #222 100%);
   color: var(--amber-glow);
   text-transform: uppercase;
   font-weight: 800;
@@ -296,13 +296,14 @@ input::placeholder {
   justify-content: center;
   gap: 12px;
   position: relative;
-  clip-path: polygon(0 0, 94% 0, 100% 50%, 94% 100%, 0 100%, 6% 50%);
+  clip-path: polygon(0 0, 90% 0, 100% 100%, 10% 100%);
   box-shadow: inset 0 0 18px rgba(0,0,0,0.6);
 }
 
 .ignite-btn:hover {
-  background: linear-gradient(135deg, #1b1b1b 0%, #2b2b2b 100%);
-  box-shadow: 0 0 18px rgba(255, 157, 0, 0.45);
+  background: var(--amber-glow);
+  color: #000;
+  box-shadow: 0 0 30px var(--amber-glow);
 }
 
 .ignite-btn::after {
@@ -310,12 +311,11 @@ input::placeholder {
   position: absolute;
   inset: 2px;
   border: 1px solid rgba(255, 157, 0, 0.35);
-  clip-path: polygon(0 0, 94% 0, 100% 50%, 94% 100%, 0 100%, 6% 50%);
+  clip-path: polygon(0 0, 90% 0, 100% 100%, 10% 100%);
   pointer-events: none;
 }
 
 .ignite-icon {
-  font-size: 16px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -325,10 +325,20 @@ input::placeholder {
 
 .ignite-btn:hover .ignite-icon {
   animation: spin 0.9s linear infinite;
+  color: #000;
+}
+
+.ignite-icon {
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24;
+  font-size: 18px;
 }
 
 .ignite-text {
   color: var(--amber-glow);
+}
+
+.ignite-btn:hover .ignite-text {
+  color: #000;
 }
 
 @keyframes spin {

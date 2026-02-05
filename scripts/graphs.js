@@ -251,28 +251,27 @@ const renderAuditDoneReceivedBars = () => {
 
   const renderBar = (el, label, value, color) => {
     const width = 220;
-    const height = 4;
     const barW = Math.round((value / max) * width);
     const amount = formatAmount(value);
     const amountParts = amount.split(" ");
     const amountValue = amountParts[0] || amount;
     const amountUnit = amountParts[1] || "";
     el.innerHTML = `
-      <div style="display:grid;gap:6px;">
-        <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(233,238,247,0.5);">${label}</div>
-        <div style="display:flex;align-items:baseline;gap:6px;">
-          <span style="font-size:18px;font-family:'JetBrains Mono',monospace;color:#E9EEF7;">${amountValue}</span>
-          <span style="font-size:10px;letter-spacing:0.2em;color:rgba(233,238,247,0.45);">${amountUnit}</span>
+      <div class="audit-metric">
+        <div class="audit-label">${label}</div>
+        <div class="audit-value">
+          <span class="audit-num">${amountValue}</span>
+          <span class="audit-unit">${amountUnit}</span>
         </div>
-        <div style="height:${height}px;background:rgba(233,238,247,0.12);width:100%;position:relative;">
-          <div style="height:${height}px;width:${barW}px;background:${color};box-shadow:0 0 10px ${color};"></div>
+        <div class="audit-track">
+          <div class="audit-fill" style="width:${barW}px;background:${color};box-shadow:0 0 10px ${color};"></div>
         </div>
       </div>
     `;
   };
 
-  renderBar(doneEl, "Done", doneVal, "#a78bfa");
-  renderBar(receivedEl, "Received", receivedVal, "#f59e0b");
+  renderBar(doneEl, "Done", doneVal, "#fbbf24");
+  renderBar(receivedEl, "Received", receivedVal, "#ef4444");
 };
 
 const escapeXml = (str) =>

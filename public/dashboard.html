@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EMPOWERS | Digital Cockpit</title>
+  <title>EMPOWERS | Full Performance Dashboard</title>
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,17 +18,15 @@
       </div>
       <span class="status-sub">System.Clearance_Lvl.4</span>
     </div>
-
     <div class="topbar-center">
       <h1 class="brand">
-        <span class="brand-metal">EMPOW</span>
-        <span class="brand-o" aria-hidden="true"></span>
-        <span class="brand-metal">ERS</span>
+        <span class="metallic-text">EMPOW</span>
+        <span class="diamond-o" aria-hidden="true"></span>
+        <span class="metallic-text">ERS</span>
       </h1>
       <div class="brand-line"></div>
-      <span class="brand-sub">Performance Cockpit Dashboard</span>
+      <span class="brand-sub">Full Performance Dashboard</span>
     </div>
-
     <div class="topbar-right">
       <div class="temp">
         <span>Internal Temp</span>
@@ -39,10 +37,10 @@
   </header>
 
   <main class="dashboard">
-    <section class="panel profile-panel">
-      <div class="corner tl"></div>
-      <div class="corner br"></div>
-      <h2 class="panel-title">Driver Profile</h2>
+    <section class="glass-panel" id="driver-profile">
+      <div class="corner-bracket bracket-tl"></div>
+      <div class="corner-bracket bracket-br"></div>
+      <h2 class="card-header">Driver Profile</h2>
       <div class="profile-block">
         <div class="profile-row">
           <span class="label">System Identification</span>
@@ -68,10 +66,10 @@
       </div>
     </section>
 
-    <section class="panel">
-      <div class="corner tl"></div>
-      <div class="corner br"></div>
-      <h2 class="panel-title">Turbo Audit Ratio</h2>
+    <section class="glass-panel" id="turbo-audit">
+      <div class="corner-bracket bracket-tl"></div>
+      <div class="corner-bracket bracket-br"></div>
+      <h2 class="card-header">Turbo Audit Ratio</h2>
       <div class="audit-layout">
         <div class="audit-circle">
           <div class="audit-circle-inner" id="audit-graph"></div>
@@ -84,10 +82,10 @@
       </div>
     </section>
 
-    <section class="panel">
-      <div class="corner tl"></div>
-      <div class="corner br"></div>
-      <h2 class="panel-title">Mission Success</h2>
+    <section class="glass-panel" id="mission-success">
+      <div class="corner-bracket bracket-tl"></div>
+      <div class="corner-bracket bracket-br"></div>
+      <h2 class="card-header">Mission Success</h2>
       <div class="grades-wrap">
         <div class="grades-score">
           <span class="score">93%</span>
@@ -105,31 +103,31 @@
       </div>
     </section>
 
-    <section class="panel">
-      <div class="corner tl"></div>
-      <div class="corner br"></div>
-      <h2 class="panel-title">System Feed</h2>
+    <section class="glass-panel" id="system-feed">
+      <div class="corner-bracket bracket-tl"></div>
+      <div class="corner-bracket bracket-br"></div>
+      <h2 class="card-header">System Feed</h2>
       <ul class="activity-list" id="activity-list"></ul>
     </section>
 
-    <section class="panel">
-      <div class="corner tl"></div>
-      <div class="corner br"></div>
-      <h2 class="panel-title">Performance Tuning</h2>
+    <section class="glass-panel" id="performance-tuning">
+      <div class="corner-bracket bracket-tl"></div>
+      <div class="corner-bracket bracket-br"></div>
+      <h2 class="card-header">Performance Tuning</h2>
       <div class="chart-box" id="skills-graph"></div>
     </section>
 
-    <section class="panel">
-      <div class="corner tl"></div>
-      <div class="corner br"></div>
-      <h2 class="panel-title">Skills</h2>
+    <section class="glass-panel" id="skills-bars-panel">
+      <div class="corner-bracket bracket-tl"></div>
+      <div class="corner-bracket bracket-br"></div>
+      <h2 class="card-header">Competency Telemetry</h2>
       <div class="chart-box" id="skills-bars"></div>
     </section>
 
-    <section class="panel">
-      <div class="corner tl"></div>
-      <div class="corner br"></div>
-      <h2 class="panel-title">XP Speed Curve</h2>
+    <section class="glass-panel" id="xp-speed">
+      <div class="corner-bracket bracket-tl"></div>
+      <div class="corner-bracket bracket-br"></div>
+      <h2 class="card-header">XP Speed Curve</h2>
       <div class="chart-box" id="xp-graph"></div>
       <div class="xp-epochs">
         <span>EPOCH.01</span>
