@@ -64,13 +64,13 @@ const renderSkillsBars = (skills) => {
     const y = 10 + i * (barH + gap);
     const barW = Math.round((pct / 100) * (width - 160));
     return `
-      <text x="10" y="${y + 12}" font-size="12" fill="#E9EEF7">${escapeXml(s.name)}</text>
-      <rect x="160" y="${y}" width="${width - 160}" height="${barH}" fill="rgba(233,238,247,0.12)" />
-      <rect x="160" y="${y}" width="${barW}" height="${barH}" fill="#8f7cf8" />
-      <text x="${160 + barW + 6}" y="${y + 12}" font-size="12" fill="#E9EEF7">${pct}%</text>
+      <text x="10" y="${y + 12}" class="skills-bars-label">${escapeXml(s.name)}</text>
+      <rect x="160" y="${y}" width="${width - 160}" height="${barH}" class="skills-bars-track" />
+      <rect x="160" y="${y}" width="${barW}" height="${barH}" class="skills-bars-fill" />
+      <text x="${160 + barW + 6}" y="${y + 12}" class="skills-bars-pct">${pct}%</text>
     `;
   }).join("");
-  container.innerHTML = `<svg width="${width}" height="${height}">${rows}</svg>`;
+  container.innerHTML = `<svg class="skills-bars-svg" width="${width}" height="${height}">${rows}</svg>`;
 };
 
 const renderRadarChartSVG = (skills) => {
@@ -83,26 +83,24 @@ const renderRadarChartSVG = (skills) => {
     return;
   }
 
-  container.style.overflow = "auto";
-
   const maxValue = Math.max(...data.map((d) => d.value)) || 1;
   const count = data.length;
-  const radius = Math.max(180, count * 6);
-  const size = radius * 2 + 220;
+  const radius = Math.max(220, count * 7);
+  const size = radius * 2 + 240;
   const cx = size / 2;
   const cy = size / 2;
 
   const rings = 5;
   const ringEls = Array.from({ length: rings }).map((_, i) => {
     const r = ((i + 1) / rings) * radius;
-    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(233,238,247,0.25)" />`;
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" class="skills-radar-ring" />`;
   }).join("");
 
   const spokes = data.map((_, i) => {
     const angle = (Math.PI * 2 * i) / count - Math.PI / 2;
     const x = cx + Math.cos(angle) * radius;
     const y = cy + Math.sin(angle) * radius;
-    return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(233,238,247,0.2)" />`;
+    return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" class="skills-radar-spoke" />`;
   }).join("");
 
   const points = data.map((d, i) => {
@@ -122,7 +120,7 @@ const renderRadarChartSVG = (skills) => {
     const y = cy + Math.sin(angle) * lr;
     const label = truncateLabel(d.name, 18);
     return `
-      <text x="${x}" y="${y}" font-size="11" fill="#E9EEF7" text-anchor="middle">
+      <text x="${x}" y="${y}" class="skills-radar-label" text-anchor="middle">
         ${escapeXml(label)}
         <title>${escapeXml(`${d.name}: ${d.value}`)}</title>
       </text>
@@ -130,17 +128,17 @@ const renderRadarChartSVG = (skills) => {
   }).join("");
 
   const dots = points.map((p) =>
-    `<circle cx="${p.x}" cy="${p.y}" r="2.5" fill="#1a73e8" />`
+    `<circle cx="${p.x}" cy="${p.y}" r="2.5" class="skills-radar-dot" />`
   ).join("");
 
   container.innerHTML = `
-    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-      <text x="${cx}" y="24" font-size="16" font-weight="600" fill="#E9EEF7" text-anchor="middle">
+    <svg class="skills-radar-svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      <text x="${cx}" y="24" class="skills-radar-title" text-anchor="middle">
         Skills (Technical + Technologies)
       </text>
       ${ringEls}
       ${spokes}
-      <polygon points="${polygon}" fill="rgba(26,115,232,0.2)" stroke="#1a73e8" stroke-width="2" />
+      <polygon points="${polygon}" class="skills-radar-polygon" />
       ${dots}
       ${labels}
     </svg>
@@ -173,9 +171,9 @@ const renderGradesBar = () => {
   const passW = Math.round((passVal / total) * width);
   const failW = width - passW;
   container.innerHTML = `
-    <svg width="${width}" height="${height}">
-      <rect x="0" y="0" width="${passW}" height="${height}" fill="#2ecc71" />
-      <rect x="${passW}" y="0" width="${failW}" height="${height}" fill="#e74c3c" />
+    <svg class="grades-svg" width="${width}" height="${height}">
+      <rect x="0" y="0" width="${passW}" height="${height}" class="grades-pass" />
+      <rect x="${passW}" y="0" width="${failW}" height="${height}" class="grades-fail" />
     </svg>
   `;
 };
@@ -208,25 +206,24 @@ const renderAuditBar = () => {
   const progress = arc * (pct / 100);
 
   container.innerHTML = `
-    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+    <svg class="audit-gauge-svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
       <defs>
         <linearGradient id="gold-ring" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stop-color="#F6C445"/>
           <stop offset="100%" stop-color="#EF4444"/>
         </linearGradient>
       </defs>
-      <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="rgba(251,191,36,0.12)" stroke-width="${stroke}"
+      <circle cx="${c}" cy="${c}" r="${r}" class="audit-gauge-base"
         stroke-dasharray="${arc} ${circumference - arc}" stroke-dashoffset="${arcOffset}" />
-      <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="url(#gold-ring)" stroke-width="${stroke}"
-        stroke-dasharray="${progress} ${circumference - progress}" stroke-dashoffset="${arcOffset}"
-        stroke-linecap="round" />
-      <g stroke="rgba(251,191,36,0.5)" stroke-width="2">
+      <circle cx="${c}" cy="${c}" r="${r}" class="audit-gauge-progress"
+        stroke-dasharray="${progress} ${circumference - progress}" stroke-dashoffset="${arcOffset}" />
+      <g class="audit-gauge-ticks">
         <line x1="${c}" y1="${c - r}" x2="${c}" y2="${c - r - 10}" />
         <line x1="${c + r * 0.7}" y1="${c + r * 0.7}" x2="${c + r * 0.78}" y2="${c + r * 0.78}" />
         <line x1="${c - r * 0.7}" y1="${c + r * 0.7}" x2="${c - r * 0.78}" y2="${c + r * 0.78}" />
       </g>
-      <text x="${c}" y="${c + 4}" font-size="26" font-weight="800" text-anchor="middle" fill="#F6C445" font-style="italic">${ratioText}</text>
-      <text x="${c}" y="${c + 24}" font-size="9" text-anchor="middle" fill="rgba(251,191,36,0.8)" letter-spacing="2">RATIO BOOST</text>
+      <text x="${c}" y="${c + 4}" class="audit-gauge-value" text-anchor="middle">${ratioText}</text>
+      <text x="${c}" y="${c + 24}" class="audit-gauge-label" text-anchor="middle">RATIO BOOST</text>
     </svg>
   `;
 };
@@ -249,7 +246,7 @@ const renderAuditDoneReceivedBars = () => {
     return `${value.toFixed(2)} B`;
   };
 
-  const renderBar = (el, label, value, color) => {
+  const renderBar = (el, label, value, className) => {
     const width = 220;
     const barW = Math.round((value / max) * width);
     const amount = formatAmount(value);
@@ -264,14 +261,17 @@ const renderAuditDoneReceivedBars = () => {
           <span class="audit-unit">${amountUnit}</span>
         </div>
         <div class="audit-track">
-          <div class="audit-fill" style="width:${barW}px;background:${color};box-shadow:0 0 10px ${color};"></div>
+          <svg class="audit-svg" width="${width}" height="4" viewBox="0 0 ${width} 4" preserveAspectRatio="none">
+            <rect x="0" y="0" width="${width}" height="4" class="audit-track-rect" />
+            <rect x="0" y="0" width="${barW}" height="4" class="${className}" />
+          </svg>
         </div>
       </div>
     `;
   };
 
-  renderBar(doneEl, "Done", doneVal, "#fbbf24");
-  renderBar(receivedEl, "Received", receivedVal, "#ef4444");
+  renderBar(doneEl, "Done", doneVal, "audit-fill audit-fill-done");
+  renderBar(receivedEl, "Received", receivedVal, "audit-fill audit-fill-received");
 };
 
 const escapeXml = (str) =>
@@ -325,10 +325,8 @@ const renderXpGraphSVG = (points) => {
     return;
   }
 
-  container.style.overflow = "auto";
-
-  const width = 720;
-  const height = 220;
+  const width = 900;
+  const height = 280;
   const padding = 36;
   const minX = points[0].date.getTime();
   const maxX = points[points.length - 1].date.getTime();
@@ -354,7 +352,7 @@ const renderXpGraphSVG = (points) => {
   };
 
   container.innerHTML = `
-    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+    <svg class="xp-svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
       <defs>
         <linearGradient id="xp-line" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stop-color="#F6C445"/>
@@ -365,12 +363,12 @@ const renderXpGraphSVG = (points) => {
           <stop offset="100%" stop-color="rgba(246,196,69,0)"/>
         </linearGradient>
       </defs>
-      <text x="10" y="18" font-size="14" fill="#E9EEF7">XP Progression</text>
-      <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="rgba(233,238,247,0.15)" />
-      <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" stroke="rgba(233,238,247,0.15)" />
+      <text x="10" y="18" class="xp-title">XP Progression</text>
+      <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" class="xp-axis" />
+      <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" class="xp-axis" />
       <polyline fill="none" stroke="url(#xp-line)" stroke-width="2" points="${line}" />
-      <circle cx="${scaleX(series[series.length - 1].x)}" cy="${scaleY(series[series.length - 1].y)}" r="3" fill="#F6C445" />
-      <text x="${width - padding}" y="${padding}" font-size="12" text-anchor="end" fill="#E9EEF7">
+      <circle cx="${scaleX(series[series.length - 1].x)}" cy="${scaleY(series[series.length - 1].y)}" r="3" class="xp-point" />
+      <text x="${width - padding}" y="${padding}" class="xp-total" text-anchor="end">
         Total ${formatBytes(total)}
       </text>
     </svg>
