@@ -70,7 +70,11 @@ const renderSkillsBars = (skills) => {
       <text x="${160 + barW + 6}" y="${y + 18}" class="skills-bars-pct">${pct}%</text>
     `;
   }).join("");
-  container.innerHTML = `<svg class="skills-bars-svg" width="${width}" height="${height}">${rows}</svg>`;
+  container.innerHTML = `
+    <svg class="skills-bars-svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMinYMin meet">
+      ${rows}
+    </svg>
+  `;
 };
 
 const renderRadarChartSVG = (skills) => {

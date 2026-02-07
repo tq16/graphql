@@ -239,7 +239,7 @@ const runProfileSanityCheck = async () => {
               name,
               amount: Number(tx.amount) || 0,
             });
-            if (unique.length === 5) break;
+            if (unique.length === 10) break;
           }
 
           activityEl.innerHTML = unique.length
