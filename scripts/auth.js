@@ -2,7 +2,7 @@ const SIGNIN_URL = "https://learn.reboot01.com/api/auth/signin";
 const JWT_KEY = "jwt";
 
 const path = window.location.pathname;
-const isLoginPage = path.endsWith("login.html");
+const isLoginPage = path.endsWith("index.html") || path.endsWith("login.html");
 const isDashboardPage = path.endsWith("dashboard.html");
 
 const token = localStorage.getItem(JWT_KEY);
@@ -12,7 +12,7 @@ if (isLoginPage && token) {
 }
 
 if (!isLoginPage && !token) {
-  window.location.replace("login.html");
+  window.location.replace("index.html");
 }
 
 if (isDashboardPage) {
@@ -21,7 +21,7 @@ if (isDashboardPage) {
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
       localStorage.removeItem(JWT_KEY);
-      window.location.replace("login.html");
+      window.location.replace("index.html");
     });
   }
 } else if (isLoginPage) {

@@ -400,7 +400,7 @@ const initGraphs = async () => {
     const status = error?.status;
     if (status === 401 || status === 403) {
       localStorage.removeItem("jwt");
-      window.location.replace("login.html");
+      window.location.replace("index.html");
       return;
     }
     console.error(error);
