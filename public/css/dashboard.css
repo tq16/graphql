@@ -421,6 +421,18 @@ body::before {
   place-items: center;
 }
 
+#xp-graph {
+  display: grid;
+  place-items: center;
+  min-height: 380px;
+}
+
+#xp-graph .xp-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 #skills-graph svg {
   display: block;
   margin: 0 auto;
@@ -451,7 +463,7 @@ body::before {
 }
 
 #xp-speed .chart-box {
-  min-height: 460px;
+  min-height: 500px;
 }
 
 #xp-speed {
@@ -483,7 +495,7 @@ body::before {
 }
 
 .skills-bars-fill {
-  fill: #8f7cf8;
+  fill: #fbbf24;
 }
 
 .skills-radar-title {

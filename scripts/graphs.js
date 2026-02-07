@@ -56,18 +56,18 @@ const renderSkillsBars = (skills) => {
   }
   const toPercent = (raw) => Math.max(0, Math.min(100, Math.round(Number(raw) || 0)));
   const width = Math.max(320, Math.min(600, container.clientWidth || 600));
-  const barH = 18;
-  const gap = 8;
-  const height = skills.length * (barH + gap) + 10;
+  const barH = 28;
+  const gap = 12;
+  const height = skills.length * (barH + gap) + 32;
   const rows = skills.map((s, i) => {
     const pct = toPercent(s.value);
     const y = 10 + i * (barH + gap);
     const barW = Math.round((pct / 100) * (width - 160));
     return `
-      <text x="10" y="${y + 12}" class="skills-bars-label">${escapeXml(s.name)}</text>
+      <text x="10" y="${y + 18}" class="skills-bars-label">${escapeXml(s.name)}</text>
       <rect x="160" y="${y}" width="${width - 160}" height="${barH}" class="skills-bars-track" />
       <rect x="160" y="${y}" width="${barW}" height="${barH}" class="skills-bars-fill" />
-      <text x="${160 + barW + 6}" y="${y + 12}" class="skills-bars-pct">${pct}%</text>
+      <text x="${160 + barW + 6}" y="${y + 18}" class="skills-bars-pct">${pct}%</text>
     `;
   }).join("");
   container.innerHTML = `<svg class="skills-bars-svg" width="${width}" height="${height}">${rows}</svg>`;
@@ -325,9 +325,9 @@ const renderXpGraphSVG = (points) => {
     return;
   }
 
-  const width = 900;
-  const height = 280;
-  const padding = 36;
+  const width = 1280;
+  const height = 360;
+  const padding = 40;
   const minX = points[0].date.getTime();
   const maxX = points[points.length - 1].date.getTime();
 
