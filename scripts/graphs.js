@@ -56,7 +56,7 @@ const renderSkillsBars = (skills) => {
   }
   const toPercent = (raw) => Math.max(0, Math.min(100, Math.round(Number(raw) || 0)));
   const width = Math.max(320, Math.min(600, container.clientWidth || 600));
-  const barH = 16;
+  const barH = 18;
   const gap = 8;
   const height = skills.length * (barH + gap) + 10;
   const rows = skills.map((s, i) => {
@@ -166,12 +166,12 @@ const renderGradesBar = () => {
     return;
   }
   const total = passVal + failVal || 1;
-  const width = 320;
-  const height = 24;
+  const width = Math.max(320, container.clientWidth || 520);
+  const height = 28;
   const passW = Math.round((passVal / total) * width);
   const failW = width - passW;
   container.innerHTML = `
-    <svg class="grades-svg" width="${width}" height="${height}">
+    <svg class="grades-svg" width="100%" height="${height}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
       <rect x="0" y="0" width="${passW}" height="${height}" class="grades-pass" />
       <rect x="${passW}" y="0" width="${failW}" height="${height}" class="grades-fail" />
     </svg>

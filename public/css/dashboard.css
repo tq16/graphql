@@ -272,6 +272,7 @@ body::before {
   font-size: 26px;
   color: #fff;
   letter-spacing: 0.28em;
+  text-transform: uppercase;
 }
 
 .profile-grid {
@@ -415,6 +416,58 @@ body::before {
   min-height: 320px;
 }
 
+#skills-graph {
+  display: grid;
+  place-items: center;
+}
+
+#skills-graph svg {
+  display: block;
+  margin: 0 auto;
+  width: min(520px, 100%);
+  height: auto;
+}
+
+#skills-bars-panel .chart-box {
+  min-height: unset;
+  height: auto;
+  max-height: none;
+}
+
+#skills-bars-panel .skills-bars-svg {
+  height: auto;
+}
+
+#skills-bars-panel {
+  height: auto;
+  overflow: visible;
+  align-self: start;
+}
+
+#performance-tuning .chart-box {
+  min-height: 460px;
+  display: grid;
+  place-items: center;
+}
+
+#xp-speed .chart-box {
+  min-height: 460px;
+}
+
+#xp-speed {
+  grid-column: 1 / -1;
+}
+
+#system-feed {
+  padding-bottom: 20px;
+  max-height: 360px;
+  overflow: hidden;
+}
+
+#system-feed .activity-list {
+  max-height: 260px;
+}
+
 .skills-bars-svg {
   max-width: 100%;
 }
@@ -464,11 +517,11 @@ body::before {
 }
 
 .grades-svg .grades-pass {
-  fill: #2ecc71;
+  fill: #fbbf24;
 }
 
 .grades-svg .grades-fail {
-  fill: #e74c3c;
+  fill: rgba(251,191,36,0.35);
 }
 
 .audit-gauge-base {
