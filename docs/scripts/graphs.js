@@ -165,11 +165,15 @@ const renderGradesBar = () => {
   const passVal = Number.isFinite(pass) ? pass : (passText || 0);
   const failVal = Number.isFinite(fail) ? fail : (failText || 0);
   const hasTextValues = Number.isFinite(passText) || Number.isFinite(failText);
+  const scoreEl = document.getElementById("grades-score");
   if (passVal === 0 && failVal === 0 && !hasTextValues) {
+    if (scoreEl) scoreEl.textContent = "—%";
     setTimeout(renderGradesBar, 100);
     return;
   }
   const total = passVal + failVal || 1;
+  const passPct = Math.round((passVal / total) * 100);
+  if (scoreEl) scoreEl.textContent = `${passPct}%`;
   const width = Math.max(320, container.clientWidth || 520);
   const height = 28;
   const passW = Math.round((passVal / total) * width);
