@@ -109,7 +109,11 @@ if (isDashboardPage) {
           localStorage.setItem(JWT_KEY, token);
           window.location.replace("dashboard.html");
         } else {
-          showError(errorText || "Invalid credentials");
+          if (response.status === 401 || response.status === 403) {
+            showError("Invalid username or password.");
+          } else {
+            showError(errorText || "Invalid credentials");
+          }
           console.error("Signin failed:", response.status, errorText);
         }
       } catch (error) {
